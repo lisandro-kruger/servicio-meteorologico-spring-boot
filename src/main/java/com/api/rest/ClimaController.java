@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.api.Excepcion.Excepcion;
 import com.api.domain.Clima;
 import com.api.request.ClimaRequest;
-import com.api.service.ClimaServiceImpl;
+import com.api.service.ClimaService;
 
 import jakarta.validation.Valid;
 
@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 public class ClimaController {
 
 	@Autowired
-	private ClimaServiceImpl servicioClima;
+	private ClimaService servicioClima;
 	
 	@GetMapping("/list")
 	public ResponseEntity<List<Clima>> obtenerEventos() {

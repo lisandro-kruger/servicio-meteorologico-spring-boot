@@ -10,7 +10,7 @@ import com.api.dao.ClimaRepository;
 import com.api.domain.Clima;
 
 @Service
-public class ClimaServiceImpl {
+public class ClimaService {
 
 	@Autowired
 	private ClimaRepository repositorio;
