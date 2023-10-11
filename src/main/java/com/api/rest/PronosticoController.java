@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.api.Excepcion.Excepcion;
 import com.api.domain.Pronostico;
 import com.api.request.PronosticoRequest;
-import com.api.service.PronosticoServiceImpl;
+import com.api.service.PronosticoService;
 
 import jakarta.validation.Valid;
 
@@ -27,12 +27,12 @@ import jakarta.validation.Valid;
 public class PronosticoController {
 
 	@Autowired
-	private PronosticoServiceImpl servicioPronostico;
+	private PronosticoService pronosticoService;
 
 	@GetMapping("/list")
 	public ResponseEntity<List<Pronostico>> obtenerPronostico(){
 		
-		List<Pronostico> pronosticoList = servicioPronostico.listarPronosticos();
+		List<Pronostico> pronosticoList = pronosticoService.listarPronosticos();
 		return new ResponseEntity<>(pronosticoList, HttpStatus.OK);
 	}
 
@@ -47,7 +47,7 @@ public class PronosticoController {
 
 		try {
 			Pronostico pronostico = pronosticoRequest.toModel();
-			newPronostico = servicioPronostico.guardarPronostico(pronostico);
+			newPronostico = pronosticoService.guardarPronostico(pronostico);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class PronosticoController {
 			BindingResult result) throws Excepcion {
 		Pronostico newPronostico = new Pronostico();
 		
-		Pronostico pronosticoExistente = servicioPronostico.obtenerPronosticoId(id);
+		Pronostico pronosticoExistente = pronosticoService.obtenerPronosticoId(id);
 		
 		if (result.hasErrors()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -72,7 +72,7 @@ public class PronosticoController {
 			pronosticoExistente.setProbabilidad(pronosticoRequest.getProbabilidad());
 			pronosticoExistente.setCantidad(pronosticoRequest.getCantidad());
 			pronosticoExistente.setDescripcion(pronosticoRequest.getDescripcion());
-			newPronostico = servicioPronostico.actualizarPronostico(pronosticoExistente);
+			newPronostico = pronosticoService.actualizarPronostico(pronosticoExistente);
 
 			
 		} catch (Exception e) {

@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.api.domain.Evento;
 import com.api.request.EventoRequest;
-import com.api.service.EventoServiceImpl;
+import com.api.service.EventoService;
 
 import jakarta.validation.Valid;
 
@@ -30,12 +30,12 @@ import jakarta.validation.Valid;
 public class EventoController {
 
 	@Autowired
-	private EventoServiceImpl servicioEvento;
+	private EventoService eventoService;
 
 	@GetMapping("/list")
 	public ResponseEntity<List<Evento>> obtenerEventos() {
 
-		List<Evento> eventoList = servicioEvento.listarEventos();
+		List<Evento> eventoList = eventoService.listarEventos();
 		return new ResponseEntity<>(eventoList, HttpStatus.OK);
 	}
 
@@ -50,9 +50,9 @@ public class EventoController {
 
 		try {
 			Evento evento = eventoRequest.toModel();
-			newEvento = servicioEvento.guardarEvento(evento);
+			newEvento = eventoService.guardarEvento(evento);
 			System.out.println("Se envía alerta por email a las siguienes casillas:");
-			System.out.println(servicioEvento.emailPersonas(evento.getCiudad().getId()));
+			System.out.println(eventoService.emailPersonas(evento.getCiudad().getId()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,8 +67,8 @@ public class EventoController {
 		
 		Evento eventoExistente = new Evento();
 		try {
-			eventoExistente = servicioEvento.obtenerEventoId(id);
-			servicioEvento.eliminarEvento(eventoExistente);
+			eventoExistente = eventoService.obtenerEventoId(id);
+			eventoService.eliminarEvento(eventoExistente);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

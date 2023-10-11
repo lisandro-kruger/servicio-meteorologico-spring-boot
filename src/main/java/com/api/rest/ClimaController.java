@@ -32,10 +32,8 @@ public class ClimaController {
 	
 	@GetMapping("/list")
 	public ResponseEntity<List<Clima>> obtenerEventos() {
-
 		List<Clima> climaList = servicioClima.listarClimas();
 		return new ResponseEntity<>(climaList, HttpStatus.OK);
-	
 	}
 	
 	// GUARDAR LOS DATOS DEL FORMULARIO DEL CLIMA

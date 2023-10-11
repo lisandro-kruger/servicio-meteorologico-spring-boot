@@ -10,17 +10,15 @@ import com.api.dao.ClimaRepository;
 import com.api.domain.Clima;
 
 @Service
-public class ClimaServiceImpl implements ClimaService {
+public class ClimaServiceImpl {
 
 	@Autowired
 	private ClimaRepository repositorio;
 
-	@Override
 	public List<Clima> listarClimas() {
 		return this.repositorio.findAll();
 	}
 
-	@Override
 	public Clima obtenerClimaId(Long id) throws Excepcion {
 		Clima obtenerClima = repositorio.findById(id).get();
 
@@ -30,7 +28,6 @@ public class ClimaServiceImpl implements ClimaService {
 		return obtenerClima;
 	}
 
-	@Override
 	public Clima guardarClima(Clima clima) throws Excepcion {
 		
 		Clima newClima = new Clima();
@@ -55,12 +52,11 @@ public class ClimaServiceImpl implements ClimaService {
 
 	}
 
-	@Override
 	public Clima actualizarClima(Clima clima) {
 		return this.repositorio.save(clima);
 	}
 
-	@Override
+
 	public void eliminarClima(Clima clima) {
 		this.repositorio.delete(clima);
 	}

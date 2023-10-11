@@ -1,5 +1,7 @@
 package com.api.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +22,7 @@ public class Suscripcion {
 	private String correo;
 	
 	@ManyToMany
-	private Ciudad ciudad;
+	private List<Ciudad> ciudad;
 
 	public Suscripcion() {
 		super();
@@ -42,11 +44,11 @@ public class Suscripcion {
 		this.correo = correo;
 	}
 
-	public Ciudad getCiudad() {
+	public List<Ciudad> getCiudad() {
 		return ciudad;
 	}
 
-	public void setCiudad(Ciudad ciudad) {
+	public void setCiudad(List<Ciudad> ciudad) {
 		this.ciudad = ciudad;
 	}
 	
