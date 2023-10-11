@@ -1,57 +1,56 @@
 package com.api.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.Excepcion.Excepcion;
 import com.api.dao.PronosticoRepository;
-import com.api.domain.Ciudad;
 import com.api.domain.Pronostico;
+import com.api.exceptions.BussinessException;
 
 @Service
 public class PronosticoService {
 
 	@Autowired
-	private PronosticoRepository repositorio;
+	private PronosticoRepository pronosticoRepository;
 
 	public List<Pronostico> listarPronosticos() {
-		return this.repositorio.findAll();
+		return this.pronosticoRepository.findAll();
 	}
 
-	public Pronostico obtenerPronosticoId(Long id) throws Excepcion{
-		
-		Pronostico obtenerPronostico = this.repositorio.findById(id).get();
-		
-		if(obtenerPronostico == null) {
-			throw new Excepcion("No se pudo obtener el Pronostico");
+	public Pronostico obtenerPronosticoId(Long id) throws BussinessException {
+
+		Pronostico obtenerPronostico = this.pronosticoRepository.findById(id).get();
+
+		if (obtenerPronostico == null) {
+			throw new BussinessException("No se pudo obtener el Pronostico.");
 		}
 		return obtenerPronostico;
 	}
 
-	public Pronostico guardarPronostico(Pronostico pronostico) throws Excepcion {
-		
+	public Pronostico guardarPronostico(Pronostico pronostico) throws BussinessException {
+
 		Pronostico newPronostico = new Pronostico();
-		Pronostico pronosticoExiste = this.obtenerPronosticoExiste(pronostico.getCiudad(), pronostico.getFecha());
+		Pronostico pronosticoExiste = this.obtenerPronosticoExiste(pronostico.getCiudad().getId(),
+				pronostico.getFecha());
 
 		if (pronosticoExiste != null) {
-			throw new Excepcion ("Pronostico repetido");
+			throw new BussinessException("Pronostico repetido.");
 		} else {
-			System.out.println("Pronostico guardado");
-			newPronostico = repositorio.save(pronostico);
+			newPronostico = pronosticoRepository.save(pronostico);
 		}
-		
+
 		return newPronostico;
 	}
 
 	public Pronostico actualizarPronostico(Pronostico pronostico) {
-		return this.repositorio.save(pronostico);
+		return this.pronosticoRepository.save(pronostico);
 	}
 
 	public void eliminarPronostico(Pronostico pronostico) {
-		repositorio.delete(pronostico);
+		pronosticoRepository.delete(pronostico);
 	}
 
 	/*
@@ -60,13 +59,16 @@ public class PronosticoService {
 	 * repositorio.findByFilter(pronosticoBuscarForm.getId(),pronosticoBuscarForm.
 	 * getFechaActual(),pronosticoBuscarForm.getFechaExtendida()); }
 	 */
-	public List<Pronostico> listarPronosticosFecha(Date fecha) {
-		return repositorio.findByFecha(fecha);
+	public List<Pronostico> listarPronosticosFecha(LocalDate fecha) {
+		return pronosticoRepository.findByFecha(fecha);
 	}
 
-	public Pronostico obtenerPronosticoExiste(Ciudad ciudad, Date fecha) {
+	public Pronostico obtenerPronosticoExiste(Long ciudad_id, LocalDate fecha) {
+		return pronosticoRepository.findByCiudadAndFecha(ciudad_id, fecha);
+	}
 
-		return repositorio.findByCiudadAndFecha(ciudad, fecha);
+	public List<Object[]> obtenerClimaCiudad(Long ciudad_id) {
+		return this.pronosticoRepository.searchByCiudadQueryNative(ciudad_id);
 	}
 
 }

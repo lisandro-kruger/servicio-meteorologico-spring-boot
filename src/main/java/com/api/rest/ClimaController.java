@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.api.Excepcion.Excepcion;
 import com.api.domain.Clima;
 import com.api.request.ClimaRequest;
+import com.api.service.CiudadService;
 import com.api.service.ClimaService;
+import com.api.service.EstadoClimaService;
 
 import jakarta.validation.Valid;
 
@@ -29,37 +30,48 @@ public class ClimaController {
 
 	@Autowired
 	private ClimaService servicioClima;
-	
+
+	@Autowired
+	private CiudadService ciudadService;
+
+	@Autowired
+	private EstadoClimaService estadoClimaService;
+
 	@GetMapping("/list")
 	public ResponseEntity<List<Clima>> obtenerEventos() {
 		List<Clima> climaList = servicioClima.listarClimas();
 		return new ResponseEntity<>(climaList, HttpStatus.OK);
 	}
-	
+
 	// GUARDAR LOS DATOS DEL FORMULARIO DEL CLIMA
 	@PostMapping
-	public ResponseEntity<Object> guardarClima(@Valid @RequestBody ClimaRequest climaRequest, BindingResult result) throws Exception{
-	
+	public ResponseEntity<Object> guardarClima(@Valid @RequestBody ClimaRequest climaRequest, BindingResult result)
+			throws Exception {
+
 		Clima newClima = new Clima();
-		
+
 		if (result.hasErrors()) {
-			return new ResponseEntity<Object>("¡ERROR!",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 
 		try {
 			Clima clima = climaRequest.toModel();
+
+			clima.setCiudad(ciudadService.obtenerCiudadNombre(climaRequest.getCiudad()));
+			clima.setEstadoClima(estadoClimaService.obtenerEstadoClimaNombre(climaRequest.getEstado_clima()));
+
 			newClima = servicioClima.guardarClima(clima);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return new ResponseEntity<Object>(newClima, HttpStatus.CREATED);
 	}
 
 	// GUARDAR LOS DATOS EDITADOS DEL CLIMA
 	@PutMapping("/{id}")
 	public ResponseEntity<Clima> actualizarClima(@PathVariable("id") Long id, @Valid ClimaRequest climaRequest,
-			BindingResult result) throws Excepcion {
+			BindingResult result) throws Exception {
 		Clima newClima = new Clima();
 		Clima climaExistente = servicioClima.obtenerClimaId(id);
 
@@ -70,8 +82,8 @@ public class ClimaController {
 		try {
 			climaExistente.setHumedad(climaRequest.getHumedad());
 			climaExistente.setTemperatura(climaRequest.getTemperatura());
-//			climaExistente.setCiudad(climaRequest.getCiudad());
-//			climaExistente.setEstadoClima(climaRequest.getEstadoClima());
+			climaExistente.setCiudad(ciudadService.obtenerCiudadNombre(climaRequest.getCiudad()));
+			climaExistente.setEstadoClima(estadoClimaService.obtenerEstadoClimaNombre(climaRequest.getEstado_clima()));
 
 			newClima = servicioClima.actualizarClima(climaExistente);
 
@@ -85,13 +97,13 @@ public class ClimaController {
 	// ELIMINAR UN CLIMA
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Clima> eliminarClima(@PathVariable("id") Long id) {
-		
+
 		Clima climaExistente = new Clima();
-		
+
 		try {
 			climaExistente = servicioClima.obtenerClimaId(id);
 			servicioClima.eliminarClima(climaExistente);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,53 +12,52 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.api.service.UserDetailsServiceImpl;
 
 /**
- * Aquí configuro las restricciones de acceso 
+ * Aquí configuro las restricciones de acceso
+ * 
  * @author dardo
  *
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig  {
+public class SecurityConfig {
 
-	 @Autowired
-	 UserDetailsServiceImpl userDetailsService;
+	@Autowired
+	UserDetailsServiceImpl userDetailsService;
 
-	 /**
-	  * Le digo a Spring Security con qué algoritmo encriptar las pass
-	  * @return
-	  */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+	/**
+	 * Le digo a Spring Security con qué algoritmo encriptar las pass
+	 * 
+	 * @return
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
-    	//No usar NoOpPasswordEncoder  en produccion ya que no estamos encriptando password. Usar BCryptPasswordEncoder o algun otro algoritmo
-    	return NoOpPasswordEncoder.getInstance();
+		// No usar NoOpPasswordEncoder en produccion ya que no estamos encriptando
+		// password. Usar BCryptPasswordEncoder o algun otro algoritmo
+		return NoOpPasswordEncoder.getInstance();
 	}
 
+	/**
+	 * Restringe acceso a recursos
+	 * 
+	 * @param http
+	 * @return configuracion de acceso
+	 * @throws Exception
+	 */
+	@Bean
+	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+		http.csrf().disable()
+				.authorizeHttpRequests((requests) -> requests
+						.requestMatchers("/clima/**", "/evento/**", "/pronostico/**", "/usuario/**").hasAuthority("ADMIN") // para este
+																											// recurso
+																											// debe ser
+																											// administrador
+						.requestMatchers("/ciudades/**").hasAuthority("USER") // para este solo User
+						.anyRequest().denyAll() // deniego todo el resto
+				// .anyRequest().authenticated() // el resto debe estar autenticado (no valido
+				// roles
+				).httpBasic();
+		return http.build();
+	}
 
-    /**
-     * Restringe acceso a recursos
-     * @param http
-     * @return configuracion de acceso
-     * @throws Exception
-     */
-    @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-      http.csrf().disable()
-      		.authorizeHttpRequests((requests) -> requests
-    		.requestMatchers( "/clima/**", "/evento/**", "/pronostico/**").hasAuthority("ADMIN") //para este recurso debe ser administrador
-    		.requestMatchers("/ciudades/**").hasAuthority("USER") //para este solo User
-            .anyRequest().denyAll()  //deniego todo el resto
-              // .anyRequest().authenticated() // el resto debe estar autenticado (no valido roles
-              )
-      		.httpBasic();
-      return http.build();
-    }
-    
 }
-
-
-
-
-
-
-

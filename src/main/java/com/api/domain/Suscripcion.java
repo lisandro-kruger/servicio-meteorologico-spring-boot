@@ -13,16 +13,16 @@ import jakarta.validation.constraints.Email;
 @Entity
 @Table(name = "suscripcion")
 public class Suscripcion {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Email
 	private String correo;
-	
+
 	@ManyToMany
-	private List<Ciudad> ciudad;
+	private List<Ciudad> ciudades;
 
 	public Suscripcion() {
 		super();
@@ -45,11 +45,11 @@ public class Suscripcion {
 	}
 
 	public List<Ciudad> getCiudad() {
-		return ciudad;
+		return ciudades;
 	}
 
 	public void setCiudad(List<Ciudad> ciudad) {
-		this.ciudad = ciudad;
+		this.ciudades = ciudad;
 	}
-	
+
 }

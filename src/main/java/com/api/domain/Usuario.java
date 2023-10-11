@@ -23,7 +23,7 @@ import jakarta.persistence.Id;
 public class Usuario implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	private Long id;

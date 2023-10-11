@@ -14,7 +14,7 @@ public class ClimaRequest {
 
 	private Long id;
 
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fecha;
 
 	@PositiveOrZero(message = "Humedad debe estar entre 0% a 100%")
@@ -24,10 +24,10 @@ public class ClimaRequest {
 	@PositiveOrZero(message = "Temperatura debe estar entre 0° a 60°")
 	@Max(value = 60, message = "Temperatura debe estar entre 0° a 60°")
 	private int temperatura;
-	
+
 	@NotNull
 	private String ciudad;
-	
+
 	@NotNull
 	private String estado_clima;
 
@@ -84,7 +84,7 @@ public class ClimaRequest {
 	}
 
 	public Clima toModel() {
-		
+
 		LocalDate fechaActual = LocalDate.now(); // OBTENEMOS LA FECHA ACTUAL
 
 		Clima newClima = new Clima();

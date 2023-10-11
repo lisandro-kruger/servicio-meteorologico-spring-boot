@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.api.Excepcion.Excepcion;
 import com.api.domain.Pronostico;
 import com.api.request.PronosticoRequest;
+import com.api.service.CiudadService;
 import com.api.service.PronosticoService;
 
 import jakarta.validation.Valid;
@@ -29,24 +29,31 @@ public class PronosticoController {
 	@Autowired
 	private PronosticoService pronosticoService;
 
+	@Autowired
+	private CiudadService ciudadService;
+
 	@GetMapping("/list")
-	public ResponseEntity<List<Pronostico>> obtenerPronostico(){
-		
+	public ResponseEntity<List<Pronostico>> obtenerPronostico() {
+
 		List<Pronostico> pronosticoList = pronosticoService.listarPronosticos();
 		return new ResponseEntity<>(pronosticoList, HttpStatus.OK);
 	}
 
-	@PostMapping("/agregar")
-	public ResponseEntity<Pronostico> guardarPronostico(@Valid @RequestBody PronosticoRequest pronosticoRequest, BindingResult result) {
-		
+	@PostMapping
+	public ResponseEntity<Pronostico> guardarPronostico(@Valid @RequestBody PronosticoRequest pronosticoRequest,
+			BindingResult result) throws Exception {
+
 		Pronostico newPronostico = new Pronostico();
-		
+
 		if (result.hasErrors()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 
 		try {
 			Pronostico pronostico = pronosticoRequest.toModel();
+
+			pronostico.setCiudad(ciudadService.obtenerCiudadNombre(pronosticoRequest.getCiudad()));
+
 			newPronostico = pronosticoService.guardarPronostico(pronostico);
 
 		} catch (Exception e) {
@@ -57,12 +64,12 @@ public class PronosticoController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Pronostico> actualizarPronostico(@PathVariable("id") Long id, @Valid @RequestBody PronosticoRequest pronosticoRequest,
-			BindingResult result) throws Excepcion {
+	public ResponseEntity<Pronostico> actualizarPronostico(@PathVariable("id") Long id,
+			@Valid @RequestBody PronosticoRequest pronosticoRequest, BindingResult result) throws Exception {
 		Pronostico newPronostico = new Pronostico();
-		
+
 		Pronostico pronosticoExistente = pronosticoService.obtenerPronosticoId(id);
-		
+
 		if (result.hasErrors()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
@@ -72,9 +79,10 @@ public class PronosticoController {
 			pronosticoExistente.setProbabilidad(pronosticoRequest.getProbabilidad());
 			pronosticoExistente.setCantidad(pronosticoRequest.getCantidad());
 			pronosticoExistente.setDescripcion(pronosticoRequest.getDescripcion());
+
+			pronosticoExistente.setCiudad(ciudadService.obtenerCiudadNombre(pronosticoRequest.getCiudad()));
 			newPronostico = pronosticoService.actualizarPronostico(pronosticoExistente);
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

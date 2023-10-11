@@ -2,6 +2,8 @@ package com.api.domain;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "clima")
 public class Clima {
@@ -20,15 +21,16 @@ public class Clima {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column
 	private LocalDate fecha;
-	
+
 	@Column
 	private int humedad;
-	
+
 	@Column
 	private int temperatura;
-	
+
 	@JoinColumn(name = "ciudad")
 	@ManyToOne()
 	private Ciudad ciudad;

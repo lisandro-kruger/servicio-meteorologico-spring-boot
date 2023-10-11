@@ -10,11 +10,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ciudad")
 public class Ciudad {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(unique = true)
 	private String nombre;
 
@@ -47,5 +47,5 @@ public class Ciudad {
 	public String toString() {
 		return "Ciudad [id=" + id + ", nombre=" + nombre + "]";
 	}
-	
+
 }

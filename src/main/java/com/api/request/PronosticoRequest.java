@@ -1,6 +1,6 @@
 package com.api.request;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,12 +16,12 @@ public class PronosticoRequest {
 
 	private Long id;
 
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Future(message = "La fecha solo puede ser futura")
-	private Date fecha;
+	private LocalDate fecha;
 
 	@PositiveOrZero(message = "Probabilidad de lluvia debe estar entre 0% a 100%")
-	@Max(value = 100, message = "Probabilidad de lluvia debe estar entre 0% a 100%" )
+	@Max(value = 100, message = "Probabilidad de lluvia debe estar entre 0% a 100%")
 	private int probabilidad;
 
 	@PositiveOrZero(message = "Cantidad de lluvia en mm debe ser 0 o superior")
@@ -37,7 +37,7 @@ public class PronosticoRequest {
 		super();
 	}
 
-	public PronosticoRequest(Date fecha, int probabilidad, int cantidad, String descripcion, String ciudad) {
+	public PronosticoRequest(LocalDate fecha, int probabilidad, int cantidad, String descripcion, String ciudad) {
 		super();
 		this.fecha = fecha;
 		this.probabilidad = probabilidad;
@@ -54,11 +54,11 @@ public class PronosticoRequest {
 		this.id = id;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

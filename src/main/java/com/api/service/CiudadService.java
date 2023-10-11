@@ -12,19 +12,18 @@ import com.api.domain.Ciudad;
 public class CiudadService {
 
 	@Autowired
-	private CiudadRepository repositorio;
-
+	private CiudadRepository ciudadRepository;
 
 	public List<Ciudad> listarCiudades() {
-		return repositorio.findAll();
+		return ciudadRepository.findAll();
 	}
 
 	public Ciudad obtenerCiudadId(Long id) {
-		return repositorio.findById(id).get();
+		return ciudadRepository.findById(id).get();
 	}
 
 	public Ciudad guardarCiudad(Ciudad ciudad) {
-		
+
 		Ciudad newCiudad = new Ciudad();
 		Boolean aux = false;
 		List<Ciudad> ciudades = this.listarCiudades();
@@ -37,12 +36,16 @@ public class CiudadService {
 		}
 
 		if (aux == false) {
-			newCiudad = repositorio.save(ciudad);
+			newCiudad = ciudadRepository.save(ciudad);
 		} else {
 			System.out.println("La Ciudad ya Existe !");
 		}
-		
+
 		return newCiudad;
+	}
+
+	public Ciudad obtenerCiudadNombre(String nombre) {
+		return ciudadRepository.findByName(nombre);
 	}
 
 }

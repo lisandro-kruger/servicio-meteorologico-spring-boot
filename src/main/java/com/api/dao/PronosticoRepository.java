@@ -1,24 +1,27 @@
 package com.api.dao;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.api.domain.Ciudad;
 import com.api.domain.Pronostico;
 
 @Repository
 public interface PronosticoRepository extends JpaRepository<Pronostico, Long> {
 
-	@Query("SELECT p FROM Pronostico p WHERE p.ciudad = ?1 and p.fecha  BETWEEN ?2 AND ?3")
-	List<Pronostico> findByFilter(Long id, Date fechaActual, Date fechaExtendida);
+	@Query(value = "SELECT * FROM pronostico p WHERE p.ciudad = ?1 and p.fecha BETWEEN ?2 AND ?3", nativeQuery = true)
+	List<Pronostico> findByFilter(Long ciudad_id, LocalDate fechaActual, LocalDate fechaExtendida);
 
-	@Query("SELECT p FROM Pronostico p WHERE p.fecha > ?1")
-	List<Pronostico> findByFecha(Date fecha);
+	@Query(value = "SELECT * FROM pronostico p WHERE p.fecha > ?1", nativeQuery = true)
+	List<Pronostico> findByFecha(LocalDate fecha);
 
-	@Query("SELECT p FROM Pronostico p WHERE p.ciudad = ?1 and p.fecha = ?2")
-	Pronostico findByCiudadAndFecha(Ciudad ciudad, Date fecha);
+	@Query(value = "SELECT * FROM pronostico p WHERE p.ciudad = ?1 and p.fecha = ?2", nativeQuery = true)
+	Pronostico findByCiudadAndFecha(Long ciudad_id, LocalDate fecha);
+
+	@Query(value = "SELECT p.* FROM pronostico p WHERE DATE(p.fecha) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY) AND p.id_ciudad = ?1", nativeQuery = true)
+	List<Object[]> searchByCiudadQueryNative(Long ciudad_id);
+
 }

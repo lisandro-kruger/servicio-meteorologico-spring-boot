@@ -1,6 +1,6 @@
 package com.api.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,9 +21,9 @@ public class Pronostico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column
-	private Date fecha;
+	private LocalDate fecha;
 
 	@Column
 	private int probabilidad;
@@ -42,7 +42,7 @@ public class Pronostico {
 		super();
 	}
 
-	public Pronostico(Date fecha, int probabilidad, int cantidad, String descripcion, Ciudad ciudad) {
+	public Pronostico(LocalDate fecha, int probabilidad, int cantidad, String descripcion, Ciudad ciudad) {
 		super();
 		this.fecha = fecha;
 		this.probabilidad = probabilidad;
@@ -59,11 +59,11 @@ public class Pronostico {
 		this.id = id;
 	}
 
-	public Date getFecha() {
+	public LocalDate getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
 	}
 

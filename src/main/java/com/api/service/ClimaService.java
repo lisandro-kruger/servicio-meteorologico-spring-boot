@@ -5,31 +5,31 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.Excepcion.Excepcion;
 import com.api.dao.ClimaRepository;
 import com.api.domain.Clima;
+import com.api.exceptions.BussinessException;
 
 @Service
 public class ClimaService {
 
 	@Autowired
-	private ClimaRepository repositorio;
+	private ClimaRepository climaRepository;
 
 	public List<Clima> listarClimas() {
-		return this.repositorio.findAll();
+		return this.climaRepository.findAll();
 	}
 
-	public Clima obtenerClimaId(Long id) throws Excepcion {
-		Clima obtenerClima = repositorio.findById(id).get();
+	public Clima obtenerClimaId(Long id) throws BussinessException {
+		Clima obtenerClima = climaRepository.findById(id).get();
 
 		if (obtenerClima == null) {
-			throw new Excepcion("No se pudo obtener el Clima");
+			throw new BussinessException("No se pudo obtener el Clima.");
 		}
 		return obtenerClima;
 	}
 
-	public Clima guardarClima(Clima clima) throws Excepcion {
-		
+	public Clima guardarClima(Clima clima) throws BussinessException {
+
 		Clima newClima = new Clima();
 		Boolean aux = false;
 		List<Clima> climas = this.listarClimas();
@@ -42,23 +42,26 @@ public class ClimaService {
 		}
 
 		if (aux == true) {
-			throw new Excepcion("El Clima ya existe !");
+			throw new BussinessException("El Clima ya existe !");
 
 		} else {
-			newClima = this.repositorio.save(clima);
+			newClima = this.climaRepository.save(clima);
 		}
-		
+
 		return newClima;
 
 	}
 
 	public Clima actualizarClima(Clima clima) {
-		return this.repositorio.save(clima);
+		return this.climaRepository.save(clima);
 	}
 
-
 	public void eliminarClima(Clima clima) {
-		this.repositorio.delete(clima);
+		this.climaRepository.delete(clima);
+	}
+
+	public List<Object[]> obtenerClimaCiudad(Long ciudad_id) {
+		return climaRepository.searchByCiudadQueryNative(ciudad_id);
 	}
 
 }

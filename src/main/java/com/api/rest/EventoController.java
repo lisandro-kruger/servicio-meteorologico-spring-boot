@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.api.domain.Evento;
 import com.api.request.EventoRequest;
+import com.api.service.CiudadService;
 import com.api.service.EventoService;
 
 import jakarta.validation.Valid;
@@ -32,6 +33,9 @@ public class EventoController {
 	@Autowired
 	private EventoService eventoService;
 
+	@Autowired
+	private CiudadService ciudadService;
+
 	@GetMapping("/list")
 	public ResponseEntity<List<Evento>> obtenerEventos() {
 
@@ -39,32 +43,34 @@ public class EventoController {
 		return new ResponseEntity<>(eventoList, HttpStatus.OK);
 	}
 
-	@PostMapping("/agregar")
-	public ResponseEntity<Evento> guardarEvento(@Valid @RequestBody EventoRequest eventoRequest, BindingResult result) {
-		
-		Evento newEvento = new Evento();
-		
+	@PostMapping
+	public ResponseEntity<List<Object[]>> guardarEvento(@Valid @RequestBody EventoRequest eventoRequest,
+			BindingResult result) throws Exception {
+
+		List<Object[]> listSuscriptores = null;
+
 		if (result.hasErrors()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 
 		try {
-			Evento evento = eventoRequest.toModel();
-			newEvento = eventoService.guardarEvento(evento);
-			System.out.println("Se envía alerta por email a las siguienes casillas:");
-			System.out.println(eventoService.emailPersonas(evento.getCiudad().getId()));
+			Evento newEvento = eventoRequest.toModel();
+			newEvento.setCiudad(ciudadService.obtenerCiudadNombre(eventoRequest.getCiudad()));
+			eventoService.guardarEvento(newEvento);
+
+			listSuscriptores = eventoService.suscriptores(newEvento.getCiudad().getId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new ResponseEntity<>(newEvento, HttpStatus.CREATED);
+		return new ResponseEntity<>(listSuscriptores, HttpStatus.OK);
 
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Evento> eliminarEvento(@PathVariable Long id, @RequestParam Evento evento) {
-		
+
 		Evento eventoExistente = new Evento();
 		try {
 			eventoExistente = eventoService.obtenerEventoId(id);

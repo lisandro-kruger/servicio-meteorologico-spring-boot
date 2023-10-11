@@ -10,17 +10,15 @@ import com.api.domain.EstadoClima;
 
 @Service
 public class EstadoClimaService {
-	
+
 	@Autowired
-	private EstadoClimaRepository repositorio;
-	
+	private EstadoClimaRepository estadoClimaRepository;
+
 	public List<EstadoClima> listarEstadosClima() {
-		// TODO Auto-generated method stub
-		return repositorio.findAll();
+		return estadoClimaRepository.findAll();
 	}
 
-	public void guardarEstado(EstadoClima estado){
-		// TODO Auto-generated method stub
+	public void guardarEstado(EstadoClima estado) {
 		Boolean aux = false;
 		List<EstadoClima> estados = this.listarEstadosClima();
 
@@ -32,10 +30,14 @@ public class EstadoClimaService {
 		}
 
 		if (aux == false) {
-			repositorio.save(estado);
+			estadoClimaRepository.save(estado);
 		} else {
 			System.out.println("La Estado del Clima ya Existe !");
 		}
+	}
+
+	public EstadoClima obtenerEstadoClimaNombre(String nombre) {
+		return estadoClimaRepository.findByName(nombre);
 	}
 
 }
