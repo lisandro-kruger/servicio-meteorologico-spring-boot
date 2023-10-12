@@ -13,7 +13,7 @@
 	<artifactId>servicio-meteorologico-spring-boot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>servicio-meteorologico-spring-boot</name>
-	<description>API Rest</description>
+	<description>API Rest para administrar un sistema meteorologico con Spring Security.</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
