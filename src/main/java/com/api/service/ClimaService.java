@@ -60,7 +60,7 @@ public class ClimaService {
 		this.climaRepository.delete(clima);
 	}
 
-	public List<Object[]> obtenerClimaCiudad(Long ciudad_id) {
+	public List<Clima> obtenerClimaCiudad(Long ciudad_id) {
 		return climaRepository.searchByCiudadQueryNative(ciudad_id);
 	}
 

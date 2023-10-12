@@ -67,7 +67,7 @@ public class PronosticoService {
 		return pronosticoRepository.findByCiudadAndFecha(ciudad_id, fecha);
 	}
 
-	public List<Object[]> obtenerClimaCiudad(Long ciudad_id) {
+	public List<Pronostico> obtenerClimaCiudad(Long ciudad_id) {
 		return this.pronosticoRepository.searchByCiudadQueryNative(ciudad_id);
 	}
 

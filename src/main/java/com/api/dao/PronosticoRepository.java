@@ -21,7 +21,7 @@ public interface PronosticoRepository extends JpaRepository<Pronostico, Long> {
 	@Query(value = "SELECT * FROM pronostico p WHERE p.ciudad = ?1 and p.fecha = ?2", nativeQuery = true)
 	Pronostico findByCiudadAndFecha(Long ciudad_id, LocalDate fecha);
 
-	@Query(value = "SELECT p.* FROM pronostico p WHERE DATE(p.fecha) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY) AND p.id_ciudad = ?1", nativeQuery = true)
-	List<Object[]> searchByCiudadQueryNative(Long ciudad_id);
+	@Query(value = "SELECT p.* FROM pronostico p WHERE DATE(p.fecha) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY) AND p.ciudad = ?1", nativeQuery = true)
+	List<Pronostico> searchByCiudadQueryNative(Long ciudad_id);
 
 }

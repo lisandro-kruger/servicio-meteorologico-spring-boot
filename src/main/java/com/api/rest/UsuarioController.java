@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.domain.Ciudad;
+import com.api.domain.Clima;
+import com.api.domain.Pronostico;
 import com.api.service.CiudadService;
 import com.api.service.ClimaService;
 import com.api.service.PronosticoService;
@@ -29,16 +31,24 @@ public class UsuarioController {
 	@Autowired
 	private PronosticoService pronosticoService;
 
-	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Object[]>> filtroEstado(@RequestParam(name = "ciudad") String ciudad) throws Exception {
+	@GetMapping(value="/clima", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<Clima>> consultaClima(@RequestParam(name = "ciudad") String ciudad) throws Exception {
 
 		Ciudad obtenerCiudad = ciudadService.obtenerCiudadNombre(ciudad);
 
-		List<Object[]> listClimaPronosticos = climaService.obtenerClimaCiudad(obtenerCiudad.getId());
+		List<Clima> listClima = climaService.obtenerClimaCiudad(obtenerCiudad.getId());
 
-		listClimaPronosticos.addAll(pronosticoService.obtenerClimaCiudad(obtenerCiudad.getId()));
+		return new ResponseEntity<>(listClima, HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/pronostico", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<Pronostico>> consultaPronostico(@RequestParam(name = "ciudad") String ciudad) throws Exception {
 
-		return new ResponseEntity<>(listClimaPronosticos, HttpStatus.OK);
+		Ciudad obtenerCiudad = ciudadService.obtenerCiudadNombre(ciudad);
+
+		List<Pronostico> listPronosticos = pronosticoService.obtenerClimaCiudad(obtenerCiudad.getId());
+
+		return new ResponseEntity<>(listPronosticos, HttpStatus.OK);
 	}
 
 }

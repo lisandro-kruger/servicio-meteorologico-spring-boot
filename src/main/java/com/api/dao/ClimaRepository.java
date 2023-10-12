@@ -11,6 +11,6 @@ import com.api.domain.Clima;
 @Repository
 public interface ClimaRepository extends JpaRepository<Clima, Long> {
 
-	@Query(value = "SELECT c.* FROM clima c WHERE DATE(c.fecha) = CURDATE() AND c.id_ciudad = ?1", nativeQuery = true)
-	List<Object[]> searchByCiudadQueryNative(Long id_ciudad);
+	@Query(value = "SELECT c.* FROM clima c WHERE DATE(c.fecha) = CURDATE() AND c.ciudad = ?1", nativeQuery = true)
+	List<Clima> searchByCiudadQueryNative(Long id_ciudad);
 }
