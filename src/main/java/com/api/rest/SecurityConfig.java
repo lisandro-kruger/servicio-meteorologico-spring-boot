@@ -29,6 +29,7 @@ public class SecurityConfig {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
@@ -44,19 +45,15 @@ public class SecurityConfig {
 	 * @return configuracion de acceso
 	 * @throws Exception
 	 */
+	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-				.authorizeHttpRequests((requests) -> requests
-						.requestMatchers("/clima/**", "/evento/**", "/pronostico/**", "/usuario/**").hasAuthority("ADMIN") // para este
-																											// recurso
-																											// debe ser
-																											// administrador
-						.requestMatchers("/ciudades/**").hasAuthority("USER") // para este solo User
-						.anyRequest().denyAll() // deniego todo el resto
-				// .anyRequest().authenticated() // el resto debe estar autenticado (no valido
-				// roles
-				).httpBasic();
+		http.csrf().disable().authorizeHttpRequests((requests) -> requests
+				// para este recurso debe ser administrador
+				.requestMatchers("/clima/**", "/evento/**", "/pronostico/**").hasAuthority("ADMIN")
+				.requestMatchers("/usuario/**").hasAuthority("USER") // para este solo User
+				.anyRequest().denyAll()) // deniego todo el resto
+				.httpBasic();
 		return http.build();
 	}
 

@@ -31,7 +31,7 @@ public class UsuarioController {
 	@Autowired
 	private PronosticoService pronosticoService;
 
-	@GetMapping(value="/clima", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/clima", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<Clima>> consultaClima(@RequestParam(name = "ciudad") String ciudad) throws Exception {
 
 		Ciudad obtenerCiudad = ciudadService.obtenerCiudadNombre(ciudad);
@@ -40,9 +40,10 @@ public class UsuarioController {
 
 		return new ResponseEntity<>(listClima, HttpStatus.OK);
 	}
-	
-	@GetMapping(value="/pronostico", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Pronostico>> consultaPronostico(@RequestParam(name = "ciudad") String ciudad) throws Exception {
+
+	@GetMapping(value = "/pronostico", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<Pronostico>> consultaPronostico(@RequestParam(name = "ciudad") String ciudad)
+			throws Exception {
 
 		Ciudad obtenerCiudad = ciudadService.obtenerCiudadNombre(ciudad);
 
